@@ -13,4 +13,6 @@ public interface UserService {
      */
     void saveUser(User user) throws Exception;
 
+    void updateUser(User userForm) throws Exception;
+
 }

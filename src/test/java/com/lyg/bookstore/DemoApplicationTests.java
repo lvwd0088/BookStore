@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -22,12 +24,13 @@ public class DemoApplicationTests {
 
 	@Test
 	public void queryTest() {
-        System.out.println(userMapper.getAll(null).size());
+        System.out.println(userMapper.selectByConditions(null,null,null).size());
     }
 
     @Test
     public void queryTestWithMobile(){
-        System.out.println(userMapper.getAll("%"+"0088"+"%").size());
+        System.out.println(userMapper.selectByConditions("008874564644",null,null));
+//        System.out.println(userMapper.selectByCondition("%"+"0088"+"%").size());
     }
 
 }

@@ -11,17 +11,31 @@ import java.util.List;
  */
 public interface UserMapper {
 
-//    @Select("select * from L_BOOKSTORE_BASIC_USER")
     @Select({
         "<script>",
             "SELECT * FROM L_BOOKSTORE_BASIC_USER",
             "WHERE 1=1",
-            "<when test='mobile!=null'>",
-                "AND mobile like #{mobile}",
+            "<when test='condition!=null'>",
+                "AND (",
+                    "mobile like concat(concat('%',#{condition}),'%')",
+                    "or nickName like concat(concat('%',#{condition}),'%')",
+                    "or email like concat(concat('%',#{condition}),'%')",
+                ")",
+            "</when>",
+            "<when test='registerTimeStart!=null'>",
+                "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
+            "</when>",
+            "<when test='registerTimeEnd!=null'>",
+                "AND registerTime &lt;= concat(concat('%',#{registerTimeEnd}),'%')",
             "</when>",
         "</script>"
     })
-    List<User> getAll(@Param("mobile") String mobile);
+
+    List<User> selectByConditions(
+            @Param("condition") String condition,
+            @Param("registerTimeStart") String registerTimeStart,
+            @Param("registerTimeEnd") String registerTimeEnd
+    );
 
     @Select("select count(*) from L_BOOKSTORE_BASIC_USER where nickName=#{nickName} or mobile=#{mobile} or email=#{email}")
     Integer selectCountByNickNameOrMobileOrEmail(

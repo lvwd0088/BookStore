@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class JsonMessage {
 
-//    private final static Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final static Logger logger = LoggerFactory.getLogger(JsonMessage.class);
 
     public static Map<String,Object> initJsonString(Integer code,Object data){
         Map<String,Object> respData=new HashMap<>();
@@ -48,8 +48,7 @@ public class JsonMessage {
      */
     public static Map<String,Object> failure(Exception e,String message){
         if(!(e instanceof MyException)){
-            e.printStackTrace();
-//        logger.error(message,e);
+            logger.error(message,e);
         }
         return initJsonString(0,null);
     }

@@ -46,4 +46,16 @@ public class UserController{
         }
     }
 
+    @RequestMapping(value = "/users",method = RequestMethod.PATCH)
+    public Map<String,Object> update(User user){
+        try{
+            userService.saveUser(user);
+            return JsonMessage.success();
+        }catch (Exception e){
+            return JsonMessage.failure(e,"用户保存失败");
+        }
+    }
+
+
+
 }

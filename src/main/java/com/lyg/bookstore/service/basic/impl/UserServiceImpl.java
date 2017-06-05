@@ -6,10 +6,12 @@ import com.lyg.bookstore.dao.basic.UserDao;
 import com.lyg.bookstore.mapper.UserMapper;
 import com.lyg.bookstore.model.basic.User;
 import com.lyg.bookstore.service.basic.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * Created by weida on 2017/6/4.
@@ -32,5 +34,21 @@ public class UserServiceImpl implements UserService {
             throw new MyException(CodeConstant.DATA_EXIST);
         }
         userDao.save(user);
+    }
+
+    @Override
+    public void updateUser(User userForm) throws Exception {
+        User user=userDao.findOne(userForm.getId());
+//        User user=Optional.of(userDao.findOne(userForm.getId())).get();
+//        Optional<User> userOptional=Optional.ofNullable(userDao.findOne(userForm.getId()));
+//        user.orElseThrow(MyException::new);
+        if(user==null){
+            throw new MyException(CodeConstant.DATA_NOT_EXIST);
+        }
+//
+//        if(userForm.getAccountType()!=null){
+//
+//        }
+
     }
 }
