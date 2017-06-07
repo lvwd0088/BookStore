@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,6 +26,13 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
+
+    @Override
+    public List<User> query(String condition, String beginTime, String endTime, Integer curPage, Integer pageSize) {
+        int endIndex=curPage*pageSize;
+        int beginIndex=endIndex-pageSize;
+        return userMapper.selectByConditions(condition,beginTime,endTime,beginIndex,endIndex);
+    }
 
     @Override
     public void saveUser(User user) throws Exception {
@@ -46,9 +54,18 @@ public class UserServiceImpl implements UserService {
             throw new MyException(CodeConstant.DATA_NOT_EXIST);
         }
 //
-//        if(userForm.getAccountType()!=null){
-//
-//        }
+        if(userForm.getAccountType()!=null){
+            user.setAccountType(userForm.getAccountType());
+        }
 
+        if(userForm.getAccountType()!=null){
+            user.setAccountType(userForm.getAccountType());
+        }
+
+    }
+
+    @Override
+    public void deleteUser(Integer userId) throws Exception {
+        userDao.delete(userId);
     }
 }

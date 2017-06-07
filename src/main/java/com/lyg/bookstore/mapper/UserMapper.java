@@ -13,7 +13,9 @@ public interface UserMapper {
 
     @Select({
         "<script>",
-            "SELECT * FROM L_BOOKSTORE_BASIC_USER",
+            "SELECT * FROM (",
+            "SELECT U.*,ROWNUM rn FROM ",
+            "(SELECT * FROM L_BOOKSTORE_BASIC_USER",
             "WHERE 1=1",
             "<when test='condition!=null'>",
                 "AND (",
@@ -28,13 +30,18 @@ public interface UserMapper {
             "<when test='registerTimeEnd!=null'>",
                 "AND registerTime &lt;= concat(concat('%',#{registerTimeEnd}),'%')",
             "</when>",
+            "AND ROWNUM &lt;=#{endIndex}",
+            "order by registerTime desc) u ",
+            ") where RN &gt;#{beginIndex}",
         "</script>"
     })
 
     List<User> selectByConditions(
             @Param("condition") String condition,
             @Param("registerTimeStart") String registerTimeStart,
-            @Param("registerTimeEnd") String registerTimeEnd
+            @Param("registerTimeEnd") String registerTimeEnd,
+            @Param("beginIndex") Integer beginIndex,
+            @Param("endIndex") Integer endIndex
     );
 
     @Select("select count(*) from L_BOOKSTORE_BASIC_USER where nickName=#{nickName} or mobile=#{mobile} or email=#{email}")

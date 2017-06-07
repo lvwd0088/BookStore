@@ -10,7 +10,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,12 +26,19 @@ public class DemoApplicationTests {
 
 	@Test
 	public void queryTest() {
-        System.out.println(userMapper.selectByConditions(null,null,null).size());
+        Optional<List<User>> users= Optional.ofNullable(userMapper.selectByConditions(null,null,null,0,10));
+        users.ifPresent(user -> {
+            System.out.println(user.size());
+        });
+        users= Optional.ofNullable(userMapper.selectByConditions(null,null,null,10,20));
+        users.ifPresent(user -> {
+            System.out.println(user.size());
+        });
     }
 
     @Test
     public void queryTestWithMobile(){
-        System.out.println(userMapper.selectByConditions("008874564644",null,null));
+//        System.out.println(userMapper.selectByConditions("008874564644",null,null));
 //        System.out.println(userMapper.selectByCondition("%"+"0088"+"%").size());
     }
 

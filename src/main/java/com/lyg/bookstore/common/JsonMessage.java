@@ -13,8 +13,6 @@ import java.util.Map;
  */
 public class JsonMessage {
 
-    private final static Logger logger = LoggerFactory.getLogger(JsonMessage.class);
-
     public static Map<String,Object> initJsonString(Integer code,Object data){
         Map<String,Object> respData=new HashMap<>();
         respData.put("code", code);
@@ -41,16 +39,22 @@ public class JsonMessage {
     }
 
     /**
-     * 返回异常常量以及记录错误日志
-     * @param e
+     * 返回状态码为操作失败的JSON数据
+     * @param code
      * @param message
      * @return
      */
-    public static Map<String,Object> failure(Exception e,String message){
-        if(!(e instanceof MyException)){
-            logger.error(message,e);
-        }
-        return initJsonString(0,null);
+    public static Map<String,Object> failure(Integer code,String message){
+        return initJsonString(code,message);
+    }
+
+    /**
+     * 返回状态码为操作失败的JSON数据
+     * @param code
+     * @return
+     */
+    public static Map<String,Object> failure(Integer code){
+        return initJsonString(code,null);
     }
 
 }
