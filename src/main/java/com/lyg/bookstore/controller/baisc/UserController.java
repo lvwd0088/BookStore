@@ -46,9 +46,8 @@ public class UserController{
         try{
             return JsonMessage.success(userService.query(condition,beginTime,endTime,curPage,pageSize));
         }catch (Exception e){
-//            e.printStackTrace();
+            return JsonMessage.failure(e,"用户列表获取失败");
         }
-        return JsonMessage.success();
     }
 
     @RequestMapping(value = "/users/",method = RequestMethod.POST)
@@ -57,23 +56,21 @@ public class UserController{
             userService.saveUser(user);
             return JsonMessage.success();
         }catch (Exception e){
-//            return JsonMessage.failure(e,"用户保存失败");
+            return JsonMessage.failure(e,"用户保存失败");
         }
-        return null;
     }
 
     @RequestMapping(value = "/users",method = RequestMethod.DELETE)
     public Map<String,Object> delete(@RequestParam(name = "userId") Integer userId){
         if(userId==null){
-//            return JsonMessage.failure(new MyException(CodeConstant.REQUEST_PARAM_ERROR));
+            return JsonMessage.failure(CodeConstant.REQUEST_PARAM_ERROR);
         }
         try{
             userService.deleteUser(userId);
             return JsonMessage.success();
         }catch (Exception e){
-//            return JsonMessage.failure(e,"用户删除失败");
+            return JsonMessage.failure(e,"用户删除失败");
         }
-        return null;
     }
 
 
