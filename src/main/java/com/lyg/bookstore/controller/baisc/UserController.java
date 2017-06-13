@@ -8,10 +8,7 @@ import com.lyg.bookstore.model.basic.User;
 import com.lyg.bookstore.service.basic.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -21,6 +18,7 @@ import java.util.Map;
  * Created by weida on 2017/4/9.
  */
 @RestController
+@CrossOrigin
 public class UserController{
 
     @Resource
@@ -29,14 +27,13 @@ public class UserController{
     @Resource
     private UserMapper userMapper;
 
-    @RequestMapping(value = "/users",method = RequestMethod.GET)
+    @GetMapping(value = "/users")
     public Map<String,Object> query(
             String condition,
             String beginTime,
             String endTime,
             Integer curPage,
-            Integer pageSize
-    ){
+            Integer pageSize){
         if(curPage==null){
             curPage=1;
         }

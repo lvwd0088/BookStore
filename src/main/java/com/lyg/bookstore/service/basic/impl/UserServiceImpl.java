@@ -1,6 +1,7 @@
 package com.lyg.bookstore.service.basic.impl;
 
 import com.lyg.bookstore.common.MyException;
+import com.lyg.bookstore.common.PaginationHelper;
 import com.lyg.bookstore.common.constant.CodeConstant;
 import com.lyg.bookstore.dao.basic.UserDao;
 import com.lyg.bookstore.mapper.UserMapper;
@@ -29,9 +30,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> query(String condition, String beginTime, String endTime, Integer curPage, Integer pageSize) {
-        int endIndex=curPage*pageSize;
-        int beginIndex=endIndex-pageSize;
-        return userMapper.selectByConditions(condition,beginTime,endTime,beginIndex,endIndex);
+        PaginationHelper paginationHelper=new PaginationHelper(curPage,pageSize);
+        paginationHelper.setCount(userMapper.countByConditions(condition,beginTime,endTime));
+        System.out.println(paginationHelper.getBeginIndex());
+        System.out.println(paginationHelper.getCurrentPage()*paginationHelper.getPageSize());
+        return userMapper.selectByConditions(condition,beginTime,endTime,paginationHelper.getBeginIndex(),paginationHelper.getCurrentPage()*paginationHelper.getPageSize());
     }
 
     @Override

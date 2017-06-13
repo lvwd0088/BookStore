@@ -12,30 +12,54 @@ import java.util.List;
 public interface UserMapper {
 
     @Select({
-        "<script>",
+            "<script>",
+            "SELECT count(*) FROM L_BOOKSTORE_BASIC_USER",
+            "WHERE 1=1",
+            "<when test='condition!=null'>",
+            "AND (",
+            "mobile like concat(concat('%',#{condition}),'%')",
+            "or nickName like concat(concat('%',#{condition}),'%')",
+            "or email like concat(concat('%',#{condition}),'%')",
+            ")",
+            "</when>",
+            "<when test='registerTimeStart!=null'>",
+            "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
+            "</when>",
+            "<when test='registerTimeEnd!=null'>",
+            "AND registerTime &lt;= concat(concat('%',#{registerTimeEnd}),'%')",
+            "</when>",
+            "</script>"
+    })
+    Integer countByConditions(
+            @Param("condition") String condition,
+            @Param("registerTimeStart") String registerTimeStart,
+            @Param("registerTimeEnd") String registerTimeEnd
+    );
+
+    @Select({
+            "<script>",
             "SELECT * FROM (",
             "SELECT U.*,ROWNUM rn FROM ",
             "(SELECT * FROM L_BOOKSTORE_BASIC_USER",
             "WHERE 1=1",
             "<when test='condition!=null'>",
-                "AND (",
-                    "mobile like concat(concat('%',#{condition}),'%')",
-                    "or nickName like concat(concat('%',#{condition}),'%')",
-                    "or email like concat(concat('%',#{condition}),'%')",
-                ")",
+            "AND (",
+            "mobile like concat(concat('%',#{condition}),'%')",
+            "or nickName like concat(concat('%',#{condition}),'%')",
+            "or email like concat(concat('%',#{condition}),'%')",
+            ")",
             "</when>",
             "<when test='registerTimeStart!=null'>",
-                "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
+            "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
             "</when>",
             "<when test='registerTimeEnd!=null'>",
-                "AND registerTime &lt;= concat(concat('%',#{registerTimeEnd}),'%')",
+            "AND registerTime &lt;= concat(concat('%',#{registerTimeEnd}),'%')",
             "</when>",
             "AND ROWNUM &lt;=#{endIndex}",
             "order by registerTime desc) u ",
             ") where RN &gt;#{beginIndex}",
-        "</script>"
+            "</script>"
     })
-
     List<User> selectByConditions(
             @Param("condition") String condition,
             @Param("registerTimeStart") String registerTimeStart,
