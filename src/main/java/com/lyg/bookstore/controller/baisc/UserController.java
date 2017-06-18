@@ -1,17 +1,13 @@
 package com.lyg.bookstore.controller.baisc;
 
 import com.lyg.bookstore.common.JsonMessage;
-import com.lyg.bookstore.common.MyException;
 import com.lyg.bookstore.common.constant.CodeConstant;
 import com.lyg.bookstore.mapper.UserMapper;
 import com.lyg.bookstore.model.basic.User;
 import com.lyg.bookstore.service.basic.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,16 +28,16 @@ public class UserController{
             String condition,
             String beginTime,
             String endTime,
-            Integer curPage,
+            Integer current,
             Integer pageSize){
-        if(curPage==null){
-            curPage=1;
+        if(current ==null){
+            current =1;
         }
         if(pageSize==null){
             pageSize=10;
         }
         try{
-            return JsonMessage.success(userService.query(condition,beginTime,endTime,curPage,pageSize));
+            return JsonMessage.success(userService.query(condition,beginTime,endTime, current,pageSize));
         }catch (Exception e){
             return JsonMessage.failure(e,"用户列表获取失败");
         }

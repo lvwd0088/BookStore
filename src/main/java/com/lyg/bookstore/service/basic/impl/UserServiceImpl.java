@@ -7,13 +7,10 @@ import com.lyg.bookstore.dao.basic.UserDao;
 import com.lyg.bookstore.mapper.UserMapper;
 import com.lyg.bookstore.model.basic.User;
 import com.lyg.bookstore.service.basic.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by weida on 2017/6/4.
@@ -29,12 +26,11 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public List<User> query(String condition, String beginTime, String endTime, Integer curPage, Integer pageSize) {
+    public PaginationHelper query(String condition, String beginTime, String endTime, Integer curPage, Integer pageSize) {
         PaginationHelper paginationHelper=new PaginationHelper(curPage,pageSize);
-        paginationHelper.setCount(userMapper.countByConditions(condition,beginTime,endTime));
-        System.out.println(paginationHelper.getBeginIndex());
-        System.out.println(paginationHelper.getCurrentPage()*paginationHelper.getPageSize());
-        return userMapper.selectByConditions(condition,beginTime,endTime,paginationHelper.getBeginIndex(),paginationHelper.getCurrentPage()*paginationHelper.getPageSize());
+        paginationHelper.setTotal(userMapper.countByConditions(condition,beginTime,endTime));
+        paginationHelper.setList(userMapper.selectByConditions(condition,beginTime,endTime,paginationHelper.getBeginIndex(),paginationHelper.getCurrent()*paginationHelper.getPageSize()));
+        return paginationHelper;
     }
 
     @Override

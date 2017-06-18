@@ -1,6 +1,7 @@
 package com.lyg.bookstore.service.basic;
 
 import com.lyg.bookstore.common.MyException;
+import com.lyg.bookstore.common.PaginationHelper;
 import com.lyg.bookstore.model.basic.User;
 
 import java.util.Date;
@@ -11,11 +12,11 @@ import java.util.List;
  */
 public interface UserService {
 
-    List<User> query(String condition,
-                     String beginTime,
-                     String endTime,
-                     Integer curPage,
-                     Integer pageSize
+    PaginationHelper query(String condition,
+                           String beginTime,
+                           String endTime,
+                           Integer curPage,
+                           Integer pageSize
     );
 
     /**

@@ -9,17 +9,17 @@ public class PaginationHelper {
     /**
      * 当前页
      */
-    private Integer currentPage=1;
+    private Integer current =1;
 
     /**
      * 总页数
      */
-    private Integer pageCount;
+//    private Integer pageCount;
 
     /**
      * 总条数
      */
-    private Integer count;
+    private Integer total;
 
     /**
      * 每页显示条数
@@ -34,35 +34,35 @@ public class PaginationHelper {
     /**
      * 分页数据
      */
-    private List<?> datas;
+    private List<?> list;
 
-    public Integer getCurrentPage() {
-        return currentPage;
+    public Integer getCurrent() {
+        return current;
     }
 
-    public void setCurrentPage(Integer currentPage) {
-        if(currentPage==null||currentPage<=0){
-            currentPage=1;
+    public void setCurrent(Integer current) {
+        if(current ==null|| current <=0){
+            current =1;
         }
-        System.out.println(currentPage);
-        this.currentPage = currentPage;
+        System.out.println(current);
+        this.current = current;
     }
 
-    public Integer getPageCount() {
-        return pageCount;
+//    public Integer getPageCount() {
+//        return pageCount;
+//    }
+
+    public Integer getTotal() {
+        return total;
     }
 
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-        this.pageCount=(count/pageSize)+(count%pageSize==0?0:1);
-        if(this.currentPage>pageCount){
-            this.currentPage=pageCount;
-        }
-        this.beginIndex=((currentPage-1)*pageSize);
+    public void setTotal(Integer total) {
+        this.total = total;
+//        this.pageCount=(total /pageSize)+(total %pageSize==0?0:1);
+//        if(this.current >pageCount){
+//            this.current =pageCount;
+//        }
+        this.beginIndex=((current -1)*pageSize);
     }
 
     public Integer getPageSize() {
@@ -76,12 +76,12 @@ public class PaginationHelper {
         this.pageSize = pageSize;
     }
 
-    public List<?> getDatas() {
-        return datas;
+    public List<?> getList() {
+        return list;
     }
 
-    public void setDatas(List<?> datas) {
-        this.datas = datas;
+    public void setList(List<?> list) {
+        this.list = list;
     }
 
     public Integer getBeginIndex() {
@@ -94,20 +94,20 @@ public class PaginationHelper {
 
     public PaginationHelper(){}
 
-    public PaginationHelper(Integer currentPage, Integer pageSize) {
-        this.setCurrentPage(currentPage);
+    public PaginationHelper(Integer current, Integer pageSize) {
+        this.setCurrent(current);
         this.setPageSize(pageSize);
     }
 
     @Override
     public String toString() {
         return "PaginationHelper{" +
-                "currentPage=" + currentPage +
-                ", pageCount=" + pageCount +
-                ", count=" + count +
+                "current=" + current +
+//                ", pageCount=" + pageCount +
+                ", total=" + total +
                 ", pageSize=" + pageSize +
                 ", beginIndex=" + beginIndex +
-                ", datas=" + datas +
+                ", list=" + list +
                 '}';
     }
 }
