@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @RestController
 @CrossOrigin
-public class UserController{
+public class UserController {
 
     @Resource
     private UserService userService;
@@ -24,48 +24,49 @@ public class UserController{
     private UserMapper userMapper;
 
     @GetMapping(value = "/users")
-    public Map<String,Object> query(
+    public Map<String, Object> query(
             String condition,
             String beginTime,
             String endTime,
             Integer current,
-            Integer pageSize){
-        if(current ==null){
-            current =1;
+            Integer userType,
+            Integer pageSize) {
+        if (current == null) {
+            current = 1;
         }
-        if(pageSize==null){
-            pageSize=10;
+        if (pageSize == null) {
+            pageSize = 10;
         }
-        try{
-            return JsonMessage.success(userService.query(condition,beginTime,endTime, current,pageSize));
-        }catch (Exception e){
-            return JsonMessage.failure(e,"用户列表获取失败");
+        try {
+            return JsonMessage.success(userService.query(condition, userType, beginTime, endTime, current, pageSize));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonMessage.failure(e, "用户列表获取失败");
         }
     }
 
-    @RequestMapping(value = "/users/",method = RequestMethod.POST)
-    public Map<String,Object> save(User user){
-        try{
+    @RequestMapping(value = "/users/", method = RequestMethod.POST)
+    public Map<String, Object> save(User user) {
+        try {
             userService.saveUser(user);
             return JsonMessage.success();
-        }catch (Exception e){
-            return JsonMessage.failure(e,"用户保存失败");
+        } catch (Exception e) {
+            return JsonMessage.failure(e, "用户保存失败");
         }
     }
 
-    @RequestMapping(value = "/users",method = RequestMethod.DELETE)
-    public Map<String,Object> delete(@RequestParam(name = "userId") Integer userId){
-        if(userId==null){
+    @RequestMapping(value = "/users", method = RequestMethod.DELETE)
+    public Map<String, Object> delete(@RequestParam(name = "userId") Integer userId) {
+        if (userId == null) {
             return JsonMessage.failure(CodeConstant.REQUEST_PARAM_ERROR);
         }
-        try{
+        try {
             userService.deleteUser(userId);
             return JsonMessage.success();
-        }catch (Exception e){
-            return JsonMessage.failure(e,"用户删除失败");
+        } catch (Exception e) {
+            return JsonMessage.failure(e, "用户删除失败");
         }
     }
-
 
 
 }

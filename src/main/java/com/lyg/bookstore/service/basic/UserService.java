@@ -13,6 +13,7 @@ import java.util.List;
 public interface UserService {
 
     PaginationHelper query(String condition,
+                           Integer userType,
                            String beginTime,
                            String endTime,
                            Integer curPage,

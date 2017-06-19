@@ -26,11 +26,11 @@ public class DemoApplicationTests {
 
 	@Test
 	public void queryTest() {
-        Optional<List<User>> users= Optional.ofNullable(userMapper.selectByConditions(null,null,null,0,10));
+        Optional<List<User>> users= Optional.ofNullable(userMapper.selectByConditions(null,null,null,null,0,10));
         users.ifPresent(user -> {
             System.out.println(user.size());
         });
-        users= Optional.ofNullable(userMapper.selectByConditions(null,null,null,10,20));
+        users= Optional.ofNullable(userMapper.selectByConditions(null,null,null,null,10,20));
         users.ifPresent(user -> {
             System.out.println(user.size());
         });

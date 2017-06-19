@@ -22,6 +22,9 @@ public interface UserMapper {
             "or email like concat(concat('%',#{condition}),'%')",
             ")",
             "</when>",
+            "<when test='userType!=null and userType!=0'>",
+            "AND userType = #{userType}",
+            "</when>",
             "<when test='registerTimeStart!=null'>",
             "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
             "</when>",
@@ -32,6 +35,7 @@ public interface UserMapper {
     })
     Integer countByConditions(
             @Param("condition") String condition,
+            @Param("userType") Integer userType,
             @Param("registerTimeStart") String registerTimeStart,
             @Param("registerTimeEnd") String registerTimeEnd
     );
@@ -49,6 +53,9 @@ public interface UserMapper {
             "or email like concat(concat('%',#{condition}),'%')",
             ")",
             "</when>",
+            "<when test='userType!=null and userType!=0'>",
+            "AND userType = #{userType}",
+            "</when>",
             "<when test='registerTimeStart!=null'>",
             "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
             "</when>",
@@ -62,6 +69,7 @@ public interface UserMapper {
     })
     List<User> selectByConditions(
             @Param("condition") String condition,
+            @Param("userType") Integer userType,
             @Param("registerTimeStart") String registerTimeStart,
             @Param("registerTimeEnd") String registerTimeEnd,
             @Param("beginIndex") Integer beginIndex,
