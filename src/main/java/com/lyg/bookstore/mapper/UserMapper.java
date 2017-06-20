@@ -22,22 +22,22 @@ public interface UserMapper {
             "or email like concat(concat('%',#{condition}),'%')",
             ")",
             "</when>",
-            "<when test='userType!=null and userType!=0'>",
-            "AND userType = #{userType}",
+            "<when test='accountType!=null and accountType!=0'>",
+            "AND accountType = #{accountType}",
             "</when>",
-            "<when test='registerTimeStart!=null'>",
-            "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
+            "<when test='beginTime!=null'>",
+            "AND registerTime &gt;= to_date(#{beginTime},'YYYY-MM-DD')",
             "</when>",
-            "<when test='registerTimeEnd!=null'>",
-            "AND registerTime &lt;= concat(concat('%',#{registerTimeEnd}),'%')",
+            "<when test='endTime!=null'>",
+            "AND registerTime &lt;= to_date(#{endTime},'YYYY-MM-DD')",
             "</when>",
             "</script>"
     })
     Integer countByConditions(
             @Param("condition") String condition,
-            @Param("userType") Integer userType,
-            @Param("registerTimeStart") String registerTimeStart,
-            @Param("registerTimeEnd") String registerTimeEnd
+            @Param("accountType") Integer accountType,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime
     );
 
     @Select({
@@ -53,14 +53,14 @@ public interface UserMapper {
             "or email like concat(concat('%',#{condition}),'%')",
             ")",
             "</when>",
-            "<when test='userType!=null and userType!=0'>",
-            "AND userType = #{userType}",
+            "<when test='accountType!=null and accountType!=0'>",
+            "AND accountType = #{accountType}",
             "</when>",
-            "<when test='registerTimeStart!=null'>",
-            "AND registerTime &gt;= concat(concat('%',#{registerTimeStart}),'%')",
+            "<when test='beginTime!=null'>",
+            "AND registerTime &gt;= to_date(#{beginTime},'YYYY-MM-DD')",
             "</when>",
-            "<when test='registerTimeEnd!=null'>",
-            "AND registerTime &lt;= concat(concat('%',#{registerTimeEnd}),'%')",
+            "<when test='endTime!=null'>",
+            "AND registerTime &lt;= to_date(#{endTime},'YYYY-MM-DD')",
             "</when>",
             "AND ROWNUM &lt;=#{endIndex}",
             "order by registerTime desc) u ",
@@ -69,9 +69,9 @@ public interface UserMapper {
     })
     List<User> selectByConditions(
             @Param("condition") String condition,
-            @Param("userType") Integer userType,
-            @Param("registerTimeStart") String registerTimeStart,
-            @Param("registerTimeEnd") String registerTimeEnd,
+            @Param("accountType") Integer accountType,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
             @Param("beginIndex") Integer beginIndex,
             @Param("endIndex") Integer endIndex
     );

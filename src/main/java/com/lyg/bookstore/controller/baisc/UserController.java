@@ -5,6 +5,8 @@ import com.lyg.bookstore.common.constant.CodeConstant;
 import com.lyg.bookstore.mapper.UserMapper;
 import com.lyg.bookstore.model.basic.User;
 import com.lyg.bookstore.service.basic.UserService;
+import com.lyg.bookstore.utils.ValidatorUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,7 +31,7 @@ public class UserController {
             String beginTime,
             String endTime,
             Integer current,
-            Integer userType,
+            Integer accountType,
             Integer pageSize) {
         if (current == null) {
             current = 1;
@@ -37,8 +39,12 @@ public class UserController {
         if (pageSize == null) {
             pageSize = 10;
         }
+        if((!StringUtils.isEmpty(beginTime)&&!ValidatorUtils.isDate(beginTime))
+                ||(!StringUtils.isEmpty(endTime)&&!ValidatorUtils.isDate(endTime))){
+            return JsonMessage.failure(CodeConstant.REQUEST_PARAM_ERROR);
+        }
         try {
-            return JsonMessage.success(userService.query(condition, userType, beginTime, endTime, current, pageSize));
+            return JsonMessage.success(userService.query(condition, accountType, beginTime, endTime, current, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             return JsonMessage.failure(e, "用户列表获取失败");

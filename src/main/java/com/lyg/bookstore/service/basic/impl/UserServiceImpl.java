@@ -27,14 +27,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PaginationHelper query(String condition,
-                                  Integer userType,
+                                  Integer accountType,
                                   String beginTime,
                                   String endTime,
                                   Integer curPage,
                                   Integer pageSize) {
         PaginationHelper paginationHelper = new PaginationHelper(curPage, pageSize);
-        paginationHelper.setTotal(userMapper.countByConditions(condition, userType,beginTime, endTime));
-        paginationHelper.setList(userMapper.selectByConditions(condition, userType,beginTime, endTime, paginationHelper.getBeginIndex(), paginationHelper.getCurrent() * paginationHelper.getPageSize()));
+        paginationHelper.setTotal(userMapper.countByConditions(condition, accountType,beginTime, endTime));
+        paginationHelper.setList(userMapper.selectByConditions(condition, accountType,beginTime, endTime, paginationHelper.getBeginIndex(), paginationHelper.getCurrent() * paginationHelper.getPageSize()));
         return paginationHelper;
     }
 
