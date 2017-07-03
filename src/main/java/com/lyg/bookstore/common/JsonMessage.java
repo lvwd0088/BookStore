@@ -27,8 +27,8 @@ public class JsonMessage {
      * @param data
      * @return
      */
-    public static Map<String,Object> success(Object data){
-        return initJsonString(CodeConstant.SUCCESS,data);
+    public static BookMessage success(Object data){
+        return new BookMessage(CodeConstant.SUCCESS,data);
     }
 
 
@@ -36,7 +36,7 @@ public class JsonMessage {
      * 返回状态码为操作成功的JSON数据(不含返回数据)
      * @return
      */
-    public static Map<String,Object> success(){
+    public static BookMessage success(){
         return success(null);
     }
 
@@ -46,7 +46,7 @@ public class JsonMessage {
      * @param message
      * @return
      */
-    public static Map<String,Object> failure(Exception e,String message){
+    public static BookMessage failure(Exception e,String message){
         if(e instanceof MyException){
             Integer code=Integer.parseInt(e.getMessage());
             return failure(code);
@@ -61,8 +61,8 @@ public class JsonMessage {
      * @param code
      * @return
      */
-    public static Map<String,Object> failure(Integer code){
-        return initJsonString(code,null);
+    public static BookMessage failure(Integer code){
+        return new BookMessage(code);
     }
 
 }

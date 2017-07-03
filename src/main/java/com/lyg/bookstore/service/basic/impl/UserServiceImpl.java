@@ -51,20 +51,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User userForm) throws Exception {
         User user = userDao.findOne(userForm.getId());
-//        User user=Optional.of(userDao.findOne(userForm.getId())).get();
-//        Optional<User> userOptional=Optional.ofNullable(userDao.findOne(userForm.getId()));
-//        user.orElseThrow(MyException::new);
         if (user == null) {
             throw new MyException(CodeConstant.DATA_NOT_EXIST);
-        }
-//
-        if (userForm.getAccountType() != null) {
-            user.setAccountType(userForm.getAccountType());
         }
 
         if (userForm.getAccountType() != null) {
             user.setAccountType(userForm.getAccountType());
         }
+
+        if (userForm.getAccountRemain() != null) {
+            user.setAccountRemain(userForm.getAccountRemain());
+        }
+
+        //应该不必手动保存，user扔处于托管状态
+        userDao.save(user);
 
     }
 

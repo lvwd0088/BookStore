@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     private static final Logger logger= LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(value = Exception.class)
-    public Map<String,Object> exceptionHandler(Exception e){
+    public BookMessage exceptionHandler(Exception e){
         if(e instanceof MyException){
 
         }else{

@@ -1,5 +1,6 @@
 package com.lyg.bookstore.controller.baisc;
 
+import com.lyg.bookstore.common.BookMessage;
 import com.lyg.bookstore.common.JsonMessage;
 import com.lyg.bookstore.common.constant.CodeConstant;
 import com.lyg.bookstore.mapper.UserMapper;
@@ -10,7 +11,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * Created by weida on 2017/4/9.
@@ -26,7 +26,7 @@ public class UserController {
     private UserMapper userMapper;
 
     @GetMapping(value = "/users")
-    public Map<String, Object> query(
+    public BookMessage query(
             String condition,
             String beginTime,
             String endTime,
@@ -46,13 +46,25 @@ public class UserController {
         try {
             return JsonMessage.success(userService.query(condition, accountType, beginTime, endTime, current, pageSize));
         } catch (Exception e) {
-            e.printStackTrace();
             return JsonMessage.failure(e, "用户列表获取失败");
         }
     }
 
-    @RequestMapping(value = "/users/", method = RequestMethod.POST)
-    public Map<String, Object> save(User user) {
+    @PatchMapping(value = "/users/")
+    public BookMessage update(User user) {
+        if(user.getId()==null){
+            return JsonMessage.failure(CodeConstant.REQUEST_PARAM_ERROR);
+        }
+        try {
+            userService.updateUser(user);
+            return JsonMessage.success();
+        } catch (Exception e) {
+            return JsonMessage.failure(e, "用户信息修改失败");
+        }
+    }
+
+    @PostMapping(value = "/users/")
+    public BookMessage save(User user) {
         try {
             userService.saveUser(user);
             return JsonMessage.success();
@@ -61,8 +73,8 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.DELETE)
-    public Map<String, Object> delete(@RequestParam(name = "userId") Integer userId) {
+    @DeleteMapping(value = "/users")
+    public BookMessage delete(@RequestParam(name = "userId") Integer userId) {
         if (userId == null) {
             return JsonMessage.failure(CodeConstant.REQUEST_PARAM_ERROR);
         }

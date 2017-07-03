@@ -18,8 +18,12 @@ public final class ValidatorUtils {
      * @return
      */
     public static boolean isDate(String dateString){
-        LocalDate localDate=DateUtils.parseStringToData(dateString);
-        return localDate!=null;
+        try{
+            LocalDate.parse(dateString);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
 }
