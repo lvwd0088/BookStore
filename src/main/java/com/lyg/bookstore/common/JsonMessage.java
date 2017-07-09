@@ -51,6 +51,7 @@ public class JsonMessage {
             Integer code=Integer.parseInt(e.getMessage());
             return failure(code);
         }else{
+            e.printStackTrace();
             logger.error(message);
             return failure(0);
         }

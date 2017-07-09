@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UserDao extends JpaRepository<User,Integer> {
 
+    Integer countByNickNameOrMobileOrEmail(String nickName,String mobile,String email);
+
 }

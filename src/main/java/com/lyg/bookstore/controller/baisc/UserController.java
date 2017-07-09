@@ -7,6 +7,7 @@ import com.lyg.bookstore.mapper.UserMapper;
 import com.lyg.bookstore.model.basic.User;
 import com.lyg.bookstore.service.basic.UserService;
 import com.lyg.bookstore.utils.ValidatorUtils;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,8 +51,8 @@ public class UserController {
         }
     }
 
-    @PatchMapping(value = "/users/")
-    public BookMessage update(User user) {
+    @PatchMapping(value = "/users")
+    public BookMessage update(@RequestBody User user) {
         if(user.getId()==null){
             return JsonMessage.failure(CodeConstant.REQUEST_PARAM_ERROR);
         }
@@ -63,8 +64,8 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/users/")
-    public BookMessage save(User user) {
+    @PostMapping(value = "/users")
+    public BookMessage save(@RequestBody User user) {
         try {
             userService.saveUser(user);
             return JsonMessage.success();

@@ -134,4 +134,9 @@ public class User implements Serializable{
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
+
+    public User(){
+
+    }
+
 }

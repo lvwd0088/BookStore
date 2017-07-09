@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
         if(e instanceof MyException){
 
         }else{
+            e.printStackTrace();
             logger.error("gg");
         }
         return JsonMessage.failure(0);
