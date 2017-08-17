@@ -22,7 +22,6 @@ public class BookLabelController {
 
     @RequestMapping(value = "/bookLabel",method = RequestMethod.GET)
     public BookMessage query(){
-        System.out.println(bookLabelService);
         return new BookMessage(CodeConstant.SUCCESS,bookLabelService.query());
     }
 

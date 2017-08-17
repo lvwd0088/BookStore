@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name="L_BOOKSTORE_BASIC_USER")
+@Table(name="L_BOOKSTORE_BOOK_LABEL")
 public class BookLabel {
     @Id
     private Long id;

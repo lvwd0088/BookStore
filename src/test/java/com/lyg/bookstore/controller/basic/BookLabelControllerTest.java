@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -21,8 +22,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  * Created by weida on 2017/8/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = BookStoreApplication.class)
-@WebAppConfiguration
+@WebMvcTest(BookLabelController.class)
+//@SpringBootTest(classes = BookStoreApplication.class)
+//@WebAppConfiguration
 public class BookLabelControllerTest {
 
     private MockMvc mockMvc;
