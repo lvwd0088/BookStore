@@ -2,9 +2,7 @@ package com.lyg.bookstore.model.basic;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -16,6 +14,8 @@ import java.util.Date;
 @Table(name="L_BOOKSTORE_BOOK_LABEL")
 public class BookLabel {
     @Id
+    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "SEQ_BOOK_LABEL")
+    @SequenceGenerator(name = "SEQ_BOOK_LABEL", sequenceName = "SEQ_BOOK_LABEL")
     private Long id;
 
     private String name;
