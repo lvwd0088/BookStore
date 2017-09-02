@@ -38,7 +38,7 @@ public class BookLabelController {
         }
     }
 
-    @DeleteMapping(value = "/bookLabel/id")
+    @DeleteMapping(value = "/bookLabel/{id}")
     public BookMessage delete(@PathVariable("id")Long id){
         bookLabelService.delete(id);
         return new BookMessage(CodeConstant.SUCCESS);
