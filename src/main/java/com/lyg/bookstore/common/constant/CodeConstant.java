@@ -19,7 +19,7 @@ public class CodeConstant {
     public static final int DATA_EXIST=1201;
 
     /** 记录不存在 */
-    public static final int DATA_NOT_EXIST=1201;
+    public static final int DATA_NOT_EXIST=1202;
 
     //----------记录不合法相关常量----------//
 
