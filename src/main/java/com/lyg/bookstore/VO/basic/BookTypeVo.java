@@ -14,6 +14,8 @@ public class BookTypeVo {
 
     private String name;
 
+    private String description;
+
     private Long parentId;
 
     private Date addTime;

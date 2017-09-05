@@ -1,7 +1,9 @@
 package com.lyg.bookstore.service.basic.impl;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Lists;
 import com.lyg.bookstore.VO.basic.BookTypeVo;
 import com.lyg.bookstore.common.MyException;
 import com.lyg.bookstore.common.constant.CodeConstant;
@@ -30,7 +32,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         List<BookTypeVo> data= Lists.newArrayList();
         List<BookType> bookTypes=bookTypeDao.findAllByOrderByAddTimeAsc();
         if(CollectionUtils.isNotEmpty(bookTypes)){
-            ListMultimap<Long,BookType> bookTypeMap=ArrayListMultimap.create();
+            ListMultimap<Long,BookType> bookTypeMap= ArrayListMultimap.create();
             for (BookType bookType : bookTypes) {
                 //若存在父级则存入父级ID对应的list,否则存入父级List
                 if (bookType.getParentId()==null){

@@ -17,6 +17,8 @@ public class BookType {
 
     private String name;
 
+    private String description;
+
     private Long parentId;
 
     private Date addTime;
