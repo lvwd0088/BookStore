@@ -1,7 +1,6 @@
-package com.lyg.bookstore.VO.basic;
+package com.lyg.bookstore.vo.basic;
 
 import com.google.common.collect.Lists;
-import com.lyg.bookstore.model.basic.BookType;
 import lombok.Data;
 
 import java.util.Date;
@@ -16,10 +15,10 @@ public class BookTypeVo {
 
     private String description;
 
-    private Long parentId;
+    private Long parent;
 
     private Date addTime;
 
-    protected List<BookType> belongBookTypes= Lists.newArrayList();
+    protected List<BookTypeVo> children = Lists.newArrayList();
 
 }

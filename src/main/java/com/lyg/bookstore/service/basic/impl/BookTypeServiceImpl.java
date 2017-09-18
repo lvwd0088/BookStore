@@ -4,11 +4,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.lyg.bookstore.VO.basic.BookTypeVo;
+import com.lyg.bookstore.model.basic.BookType;
+import com.lyg.bookstore.vo.basic.BookTypeVo;
 import com.lyg.bookstore.common.MyException;
 import com.lyg.bookstore.common.constant.CodeConstant;
 import com.lyg.bookstore.dao.basic.BookTypeDao;
-import com.lyg.bookstore.model.basic.BookType;
 import com.lyg.bookstore.service.basic.BookTypeService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -32,21 +32,25 @@ public class BookTypeServiceImpl implements BookTypeService {
         List<BookTypeVo> data= Lists.newArrayList();
         List<BookType> bookTypes=bookTypeDao.findAllByOrderByAddTimeAsc();
         if(CollectionUtils.isNotEmpty(bookTypes)){
-            ListMultimap<Long,BookType> bookTypeMap= ArrayListMultimap.create();
+            ListMultimap<Long,BookTypeVo> bookTypeMap= ArrayListMultimap.create();
             for (BookType bookType : bookTypes) {
                 //若存在父级则存入父级ID对应的list,否则存入父级List
                 if (bookType.getParentId()==null){
                     BookTypeVo parentBookType=new BookTypeVo();
                     BeanUtils.copyProperties(bookType,parentBookType);
+                    parentBookType.setParent(bookType.getParentId());
                     data.add(parentBookType);
                 }else{
-                    bookTypeMap.put(bookType.getParentId(),bookType);
+                    BookTypeVo childrenBookType=new BookTypeVo();
+                    BeanUtils.copyProperties(bookType,childrenBookType);
+                    childrenBookType.setParent(bookType.getParentId());
+                    bookTypeMap.put(bookType.getParentId(),childrenBookType);
                 }
             }
             for (BookTypeVo bookTypeVo : data) {
-                Optional<List<BookType>> belongBookTypesOptional=Optional.ofNullable(bookTypeMap.get(bookTypeVo.getId()));
+                Optional<List<BookTypeVo>> belongBookTypesOptional=Optional.ofNullable(bookTypeMap.get(bookTypeVo.getId()));
                 belongBookTypesOptional.ifPresent(belongBookTypes->{
-                    bookTypeVo.setBelongBookTypes(belongBookTypes);
+                    bookTypeVo.setChildren(belongBookTypes);
                 });
             }
         }

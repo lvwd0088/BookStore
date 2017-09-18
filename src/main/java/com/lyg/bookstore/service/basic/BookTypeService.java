@@ -1,6 +1,6 @@
 package com.lyg.bookstore.service.basic;
 
-import com.lyg.bookstore.VO.basic.BookTypeVo;
+import com.lyg.bookstore.vo.basic.BookTypeVo;
 import com.lyg.bookstore.common.MyException;
 import com.lyg.bookstore.model.basic.BookType;
 
