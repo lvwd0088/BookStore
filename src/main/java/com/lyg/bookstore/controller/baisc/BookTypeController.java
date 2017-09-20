@@ -38,7 +38,7 @@ public class BookTypeController {
         }
     }
 
-    @PutMapping(value = "/bookType")
+    @PatchMapping(value = "/bookType")
     public BookMessage updateBookType(@RequestBody BookType bookType) {
         if (bookType.getId() == null
                 || StringUtils.isEmpty(bookType.getName())

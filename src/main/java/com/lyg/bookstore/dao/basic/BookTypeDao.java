@@ -11,4 +11,6 @@ public interface BookTypeDao extends JpaRepository<BookType,Long>{
 
     Integer countByName(String name);
 
+    Integer countByNameAndIdIsNot(String name, Long id);
+
 }
