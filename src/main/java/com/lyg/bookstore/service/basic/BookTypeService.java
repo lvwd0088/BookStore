@@ -11,7 +11,7 @@ public interface BookTypeService {
 
     List<BookTypeVo> listBookType();
 
-    void saveBookType(BookType bookType) throws MyException;
+    void saveBookType(BookTypeVo bookTypeVo) throws MyException;
 
     void updateBookType(BookType bookTypeForm) throws MyException;
 

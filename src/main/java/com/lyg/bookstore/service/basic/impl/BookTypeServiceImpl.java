@@ -58,10 +58,13 @@ public class BookTypeServiceImpl implements BookTypeService {
     }
 
     @Override
-    public void saveBookType(BookType bookType) throws MyException {
-        Preconditions.checkNotNull(bookType.getName());
-        checkPersistentBookType(bookType);
+    public void saveBookType(BookTypeVo bookTypeVo) throws MyException {
+        Preconditions.checkNotNull(bookTypeVo.getName());
+        BookType bookType = new BookType();
+        BeanUtils.copyProperties(bookTypeVo, bookType, new String[]{"id"} );
         bookType.setAddTime(new Date());
+        bookType.setParentId(bookTypeVo.getParent());
+        checkPersistentBookType(bookType);
         bookTypeDao.save(bookType);
     }
 
@@ -91,7 +94,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         }
         //验证分类名称是否已经存在
         if (bookType.getId() != null) {
-            if (bookTypeDao.countByNameAndIdIsNot(bookType.getName(), bookType.getId()) > 0){
+            if (bookTypeDao.countByNameAndIdIsNot(bookType.getName(), bookType.getId()) > 0) {
                 throw new MyException(CodeConstant.DATA_EXIST);
             }
         } else if (bookTypeDao.countByName(bookType.getName()) > 0) {

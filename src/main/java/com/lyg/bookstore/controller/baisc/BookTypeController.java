@@ -7,6 +7,7 @@ import com.lyg.bookstore.common.constant.CodeConstant;
 import com.lyg.bookstore.model.basic.BookType;
 import com.lyg.bookstore.service.basic.BookTypeService;
 import com.lyg.bookstore.utils.ValidatorUtils;
+import com.lyg.bookstore.vo.basic.BookTypeVo;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,13 +26,13 @@ public class BookTypeController {
     }
 
     @PostMapping(value = "/bookType")
-    public BookMessage saveBookType(@RequestBody BookType bookType) {
-        if (!ValidatorUtils.isNotEmptyAndLessThan(bookType.getName(), 50)
-                || !ValidatorUtils.isNotEmptyAndLessThan(bookType.getDescription(), 200)) {
+    public BookMessage saveBookType(@RequestBody BookTypeVo bookTypeVo) {
+        if (!ValidatorUtils.isNotEmptyAndLessThan(bookTypeVo.getName(), 50)
+                || !ValidatorUtils.isNotEmptyAndLessThan(bookTypeVo.getDescription(), 200)) {
             return JsonMessage.failure(CodeConstant.REQUEST_PARAM_ERROR);
         }
         try {
-            bookTypeService.saveBookType(bookType);
+            bookTypeService.saveBookType(bookTypeVo);
             return JsonMessage.success();
         } catch (MyException e) {
             return new BookMessage(Integer.valueOf(e.getMessage()));
