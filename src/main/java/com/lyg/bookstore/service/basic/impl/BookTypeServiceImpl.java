@@ -8,7 +8,7 @@ import com.lyg.bookstore.model.basic.BookType;
 import com.lyg.bookstore.vo.basic.BookTypeVo;
 import com.lyg.bookstore.common.MyException;
 import com.lyg.bookstore.common.constant.CodeConstant;
-import com.lyg.bookstore.dao.basic.BookTypeDao;
+import com.lyg.bookstore.dao.basic.BookTypeRepository;
 import com.lyg.bookstore.service.basic.BookTypeService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -25,12 +25,12 @@ import java.util.Optional;
 public class BookTypeServiceImpl implements BookTypeService {
 
     @Resource
-    private BookTypeDao bookTypeDao;
+    private BookTypeRepository bookTypeRepository;
 
     @Override
     public List<BookTypeVo> listBookType() {
         List<BookTypeVo> data = Lists.newArrayList();
-        List<BookType> bookTypes = bookTypeDao.findAllByOrderByAddTimeAsc();
+        List<BookType> bookTypes = bookTypeRepository.findAllByOrderByAddTimeAsc();
         if (CollectionUtils.isNotEmpty(bookTypes)) {
             ListMultimap<Long, BookTypeVo> bookTypeMap = ArrayListMultimap.create();
             for (BookType bookType : bookTypes) {
@@ -65,7 +65,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         bookType.setAddTime(new Date());
         bookType.setParentId(bookTypeVo.getParent());
         checkPersistentBookType(bookType);
-        bookTypeDao.save(bookType);
+        bookTypeRepository.save(bookType);
     }
 
     @Override
@@ -73,31 +73,31 @@ public class BookTypeServiceImpl implements BookTypeService {
         Preconditions.checkNotNull(bookTypeForm.getName());
         Preconditions.checkNotNull(bookTypeForm.getId());
         checkPersistentBookType(bookTypeForm);
-        Optional<BookType> bookTypeOptional = Optional.ofNullable(bookTypeDao.findOne(bookTypeForm.getId()));
+        Optional<BookType> bookTypeOptional = Optional.ofNullable(bookTypeRepository.findOne(bookTypeForm.getId()));
         bookTypeOptional.orElseThrow(() -> new MyException(CodeConstant.DATA_NOT_EXIST));
         BookType bookTypeBean = bookTypeOptional.get();
         bookTypeBean.setName(bookTypeForm.getName());
         bookTypeBean.setDescription(bookTypeForm.getDescription());
-        bookTypeDao.save(bookTypeBean);
+        bookTypeRepository.save(bookTypeBean);
     }
 
     @Override
     public void deleteBookType(Long id) {
         //TODO 需检查分类下是否存在对应的图书
-        bookTypeDao.delete(id);
+        bookTypeRepository.delete(id);
     }
 
     private void checkPersistentBookType(BookType bookType) throws MyException {
         //若存在父级ID,则需先验证父级ID是否存在
-        if (bookType.getParentId() != null && bookTypeDao.getOne(bookType.getParentId()) == null) {
+        if (bookType.getParentId() != null && bookTypeRepository.getOne(bookType.getParentId()) == null) {
             throw new MyException(CodeConstant.DATA_NOT_EXIST);
         }
         //验证分类名称是否已经存在
         if (bookType.getId() != null) {
-            if (bookTypeDao.countByNameAndIdIsNot(bookType.getName(), bookType.getId()) > 0) {
+            if (bookTypeRepository.countByNameAndIdIsNot(bookType.getName(), bookType.getId()) > 0) {
                 throw new MyException(CodeConstant.DATA_EXIST);
             }
-        } else if (bookTypeDao.countByName(bookType.getName()) > 0) {
+        } else if (bookTypeRepository.countByName(bookType.getName()) > 0) {
             throw new MyException(CodeConstant.DATA_EXIST);
         }
     }

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BookTypeDao extends JpaRepository<BookType,Long>{
+public interface BookTypeRepository extends JpaRepository<BookType,Long>{
 
     List<BookType> findAllByOrderByAddTimeAsc();
 

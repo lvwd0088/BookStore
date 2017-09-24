@@ -1,6 +1,6 @@
 package com.lyg.bookstore;
 
-import com.lyg.bookstore.dao.basic.UserDao;
+import com.lyg.bookstore.dao.basic.UserRepository;
 import com.lyg.bookstore.mapper.UserMapper;
 import com.lyg.bookstore.model.basic.User;
 import org.junit.Test;
@@ -10,9 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -20,7 +18,7 @@ import java.util.Optional;
 public class DemoApplicationTests {
 
     @Resource
-    private UserDao userDao;
+    private UserRepository userDao;
 
     @Resource
     private UserMapper userMapper;

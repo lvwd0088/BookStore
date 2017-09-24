@@ -19,6 +19,6 @@ public class BookTypeVo {
 
     private Date addTime;
 
-    protected List<BookTypeVo> children = Lists.newArrayList();
+    private List<BookTypeVo> children = Lists.newArrayList();
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by weida on 2017/7/18.
  * 书签相关jpa dao
  */
-public interface BookLabelDao extends JpaRepository<BookLabel,Long>{
+public interface BookLabelRepository extends JpaRepository<BookLabel,Long>{
 
     List<BookLabel> findAllByOrderByAddTimeAsc();
 
