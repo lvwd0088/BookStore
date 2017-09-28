@@ -1,7 +1,7 @@
 package com.lyg.bookstore.controller.basic;
 
 import com.lyg.bookstore.BookStoreApplication;
-import com.lyg.bookstore.controller.baisc.BookLabelController;
+import com.lyg.bookstore.controller.baisc.LabelController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,19 +23,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ContextConfiguration(classes = BookStoreApplication.class)
 @WebMvcTest
 //@WebAppConfiguration
-public class BookLabelControllerTest {
+public class LabelControllerTest {
 
     private MockMvc mockMvc;
 
     @Before
     public void setup(){
-        mockMvc= MockMvcBuilders.standaloneSetup(new BookLabelController()).build();
+        mockMvc= MockMvcBuilders.standaloneSetup(new LabelController()).build();
     }
 
     @Test
     public void queryTest(){
         try {
-            MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/bookLabel").accept(MediaType.APPLICATION_JSON)).andReturn();
+            MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Label").accept(MediaType.APPLICATION_JSON)).andReturn();
             MockHttpServletResponse response=mvcResult.getResponse();
             int status=response.getStatus();
             String content=response.getContentAsString();

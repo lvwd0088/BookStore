@@ -1,12 +1,14 @@
 package com.lyg.bookstore.service.basic.impl;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.lyg.bookstore.common.MyException;
 import com.lyg.bookstore.common.PaginationHelper;
 import com.lyg.bookstore.common.constant.CodeConstant;
-import com.lyg.bookstore.dao.basic.BookLabelRepository;
+import com.lyg.bookstore.dao.basic.LabelRepository;
 import com.lyg.bookstore.dao.basic.BookRepository;
 import com.lyg.bookstore.dao.basic.BookTypeRepository;
+import com.lyg.bookstore.mapper.BookLabelMapper;
 import com.lyg.bookstore.model.basic.Book;
 import com.lyg.bookstore.service.basic.BookService;
 import com.lyg.bookstore.vo.basic.BookVo;
@@ -31,7 +33,10 @@ public class BookServiceImpl implements BookService {
     private BookTypeRepository bookTypeRepository;
 
     @Resource
-    private BookLabelRepository bookLabelRepository;
+    private LabelRepository LabelRepository;
+
+    @Resource
+    private BookLabelMapper bookLabelMapper;
 
     public PaginationHelper list() {
         return null;
@@ -47,6 +52,9 @@ public class BookServiceImpl implements BookService {
         Book book = new Book();
         BeanUtils.copyProperties(bookVo, book, new String[]{"id"});
         bookRepository.save(book);
+        for (Long labelId : labelIds) {
+            bookLabelMapper.save(book.getId(), labelId);
+        }
     }
 
     public void update(BookVo bookVo) throws MyException {
@@ -61,6 +69,7 @@ public class BookServiceImpl implements BookService {
             BeanUtils.copyProperties(bookVo, book, new String[]{"id"});
             book.setUpdateTime(new Date());
             bookRepository.save(book);
+            checkBookLabels(labelIds, book.getId());
         });
     }
 
@@ -74,6 +83,10 @@ public class BookServiceImpl implements BookService {
         });
     }
 
+    public void delete(Long id){
+        bookRepository.delete(id);
+    }
+
     private void checkParams(BookVo bookVo) throws MyException {
         if (bookVo.getId() != null
                 && bookRepository.countByNameAndIdNot(bookVo.getName(), bookVo.getId()) > 0) {
@@ -83,11 +96,51 @@ public class BookServiceImpl implements BookService {
         if (bookTypeRepository.isExist(bookVo.getTypeId())) {
             throw new MyException(CodeConstant.DATA_EXIST);
         }
-        //若设置了标签且标签数量不大于5个，则需验证标签是否都存在
-        if (CollectionUtils.isNotEmpty(bookVo.getLabelIds())
-                && bookVo.getLabelIds().size() <= 5
-                && bookVo.getLabelIds().size() != bookLabelRepository.countByIdIn(bookVo.getLabelIds())) {
+        if (CollectionUtils.isEmpty(bookVo.getLabelIds())){
+            throw new MyException(CodeConstant.REQUEST_PARAM_ERROR);
+        }
+        //标签数量为1-5个
+        if (bookVo.getLabelIds().size() > 5
+                || bookVo.getLabelIds().size() != LabelRepository.countByIdIn(bookVo.getLabelIds())) {
             throw new MyException(CodeConstant.DATA_EXIST);
+        }
+    }
+
+    /**
+     * 验证传入的书签列表是否与数据中的一致，若不一致则以最终传入的书签列表为准
+     * @param labelIds
+     * @param bookId
+     */
+    private void checkBookLabels(List<Long> labelIds, Long bookId) {
+        List<Long> dbLabelIds = bookLabelMapper.findAllLabelIdByBookId(bookId);
+        if (dbLabelIds.containsAll(labelIds) && labelIds.containsAll(dbLabelIds)){
+            //若新传入的所属标签ID是否与先前保存的一致则表示未修改过标签
+            return;
+        }else{
+            List<Long> delLabelIds = Lists.newArrayList();
+            List<Long> newLabelIds = Lists.newArrayList();
+            for (Long labelId : labelIds) {
+                if (!dbLabelIds.contains(labelId)){
+                    //保存了新标签
+                    newLabelIds.add(labelId);
+                }
+            }
+            for (Long labelId : dbLabelIds) {
+                if (!labelIds.contains(labelId)){
+                    //删除了新标签
+                    delLabelIds.add(labelId);
+                }
+            }
+            if (CollectionUtils.isNotEmpty(delLabelIds)){
+                for (Long delLabelId : delLabelIds) {
+                    bookLabelMapper.deleteByBookIdAndLabelId(bookId, delLabelId);
+                }
+            }
+            if (CollectionUtils.isNotEmpty(newLabelIds)){
+                for (Long newLabelId : newLabelIds) {
+                    bookLabelMapper.save(bookId, newLabelId);
+                }
+            }
         }
     }
 

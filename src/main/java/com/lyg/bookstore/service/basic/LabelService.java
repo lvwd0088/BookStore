@@ -1,18 +1,18 @@
 package com.lyg.bookstore.service.basic;
 
 import com.lyg.bookstore.common.MyException;
-import com.lyg.bookstore.model.basic.BookLabel;
+import com.lyg.bookstore.model.basic.Label;
 
 import java.util.List;
 
 /**
  * Created by weida on 2017/7/18.
  */
-public interface BookLabelService {
+public interface LabelService {
 
-//    List<BookLabel> findAllByOrderByIdAsc();
+//    List<Label> findAllByOrderByIdAsc();
 
-    List<BookLabel> query();
+    List<Label> query();
 
     void save(String labelName) throws MyException;
 

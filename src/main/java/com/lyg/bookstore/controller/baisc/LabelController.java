@@ -3,8 +3,8 @@ package com.lyg.bookstore.controller.baisc;
 import com.lyg.bookstore.common.BookMessage;
 import com.lyg.bookstore.common.MyException;
 import com.lyg.bookstore.common.constant.CodeConstant;
-import com.lyg.bookstore.model.basic.BookLabel;
-import com.lyg.bookstore.service.basic.BookLabelService;
+import com.lyg.bookstore.model.basic.Label;
+import com.lyg.bookstore.service.basic.LabelService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,32 +15,32 @@ import javax.annotation.Resource;
  */
 @RestController
 @CrossOrigin
-public class BookLabelController {
+public class LabelController {
 
     @Resource
-    private BookLabelService bookLabelService;
+    private LabelService LabelService;
 
-    @GetMapping(value = "/bookLabel")
+    @GetMapping(value = "/Label")
     public BookMessage query(){
-        return new BookMessage(CodeConstant.SUCCESS,bookLabelService.query());
+        return new BookMessage(CodeConstant.SUCCESS,LabelService.query());
     }
 
-    @PostMapping(value = "/bookLabel")
-    public BookMessage save(@RequestBody BookLabel bookLabel){
-        if(StringUtils.isEmpty(bookLabel.getName())){
+    @PostMapping(value = "/Label")
+    public BookMessage save(@RequestBody Label Label){
+        if(StringUtils.isEmpty(Label.getName())){
             return new BookMessage(CodeConstant.REQUEST_PARAM_ERROR);
         }
         try{
-            bookLabelService.save(bookLabel.getName());
+            LabelService.save(Label.getName());
             return new BookMessage(CodeConstant.SUCCESS);
         }catch (MyException e){
             return new BookMessage(Integer.valueOf(e.getMessage()));
         }
     }
 
-    @DeleteMapping(value = "/bookLabel/{id}")
+    @DeleteMapping(value = "/Label/{id}")
     public BookMessage delete(@PathVariable("id")Long id){
-        bookLabelService.delete(id);
+        LabelService.delete(id);
         return new BookMessage(CodeConstant.SUCCESS);
     }
 
