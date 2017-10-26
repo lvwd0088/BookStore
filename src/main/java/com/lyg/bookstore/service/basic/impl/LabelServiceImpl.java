@@ -19,30 +19,30 @@ import java.util.Optional;
  */
 @Service
 @Transactional
-public class LabelServiceImpl implements LabelService{
+public class LabelServiceImpl implements LabelService {
 
     @Resource
-    private LabelRepository LabelRepository;
+    private LabelRepository labelRepository;
 
     @Override
     public List<Label> query() {
-        return LabelRepository.findAllByOrderByAddTimeAsc();
+        return labelRepository.findAllByOrderByAddTimeAsc();
     }
 
     @Override
-    public void save(String labelName) throws MyException{
-        Optional<Integer> count=Optional.ofNullable(LabelRepository.countByName(labelName));
-        if(ConvertUtils.parseIntegerToInt(count)>0){
+    public void save(String labelName) throws MyException {
+        Integer count = labelRepository.countByName(labelName);
+        if (count > 0) {
             throw new MyException(CodeConstant.DATA_EXIST);
         }
-        Label Label=new Label();
-        Label.setAddTime(new Date());
-        Label.setName(labelName);
-        LabelRepository.save(Label);
+        Label label = new Label();
+        label.setAddTime(new Date());
+        label.setName(labelName);
+        labelRepository.save(label);
     }
 
     @Override
     public void delete(Long id) {
-        LabelRepository.delete(id);
+        labelRepository.delete(id);
     }
 }

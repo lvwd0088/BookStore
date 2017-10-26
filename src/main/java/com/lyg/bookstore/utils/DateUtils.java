@@ -21,7 +21,6 @@ public final class DateUtils {
     public static LocalDate parseStringToData(String dateString) {
         try{
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate date = LocalDate.parse(dateString, dateFormatter);
             return LocalDate.parse(dateString, dateFormatter);
         }catch (DateTimeParseException e){
             return null;

@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,7 +34,7 @@ public class BookServiceImpl implements BookService {
     private BookTypeRepository bookTypeRepository;
 
     @Resource
-    private LabelRepository LabelRepository;
+    private LabelRepository labelRepository;
 
     @Resource
     private BookLabelMapper bookLabelMapper;
@@ -46,15 +47,12 @@ public class BookServiceImpl implements BookService {
         List<Long> labelIds = bookVo.getLabelIds();
         if (bookRepository.isExist(bookVo.getId())) {
             return;
-//            throw
         }
         checkParams(bookVo);
         Book book = new Book();
         BeanUtils.copyProperties(bookVo, book, new String[]{"id"});
         bookRepository.save(book);
-        for (Long labelId : labelIds) {
-            bookLabelMapper.save(book.getId(), labelId);
-        }
+        labelIds.stream().forEach(labelId -> bookLabelMapper.save(book.getId(), labelId));
     }
 
     public void update(BookVo bookVo) throws MyException {
@@ -62,28 +60,23 @@ public class BookServiceImpl implements BookService {
             return;
         }
         List<Long> labelIds = bookVo.getLabelIds();
-        Optional<Book> bookOptional = Optional.ofNullable(bookRepository.findOne(bookVo.getId()));
-        bookOptional.orElseThrow(() -> new MyException(CodeConstant.DATA_EXIST));
-        checkParams(bookVo);
-        bookOptional.ifPresent(book -> {
-            BeanUtils.copyProperties(bookVo, book, new String[]{"id"});
-            book.setUpdateTime(new Date());
-            bookRepository.save(book);
-            checkBookLabels(labelIds, book.getId());
-        });
+        Book book = Optional.ofNullable(bookRepository.findOne(bookVo.getId()))
+                .orElseThrow(() -> new MyException(CodeConstant.DATA_EXIST));
+        BeanUtils.copyProperties(bookVo, book, new String[]{"id"});
+        book.setUpdateTime(new Date());
+        bookRepository.save(book);
+        checkBookLabels(labelIds, book.getId());
     }
 
     public void updateStatus(Long id, Integer status) throws MyException {
-        Optional<Book> bookOptional = Optional.ofNullable(bookRepository.findOne(id));
-        bookOptional.orElseThrow(() -> new MyException(CodeConstant.DATA_EXIST));
-        bookOptional.ifPresent(book -> {
-            book.setStatus(status);
-            book.setUpdateTime(new Date());
-            bookRepository.save(book);
-        });
+        Book book = Optional.ofNullable(bookRepository.findOne(id))
+                .orElseThrow(() -> new MyException(CodeConstant.DATA_EXIST));
+        book.setStatus(status);
+        book.setUpdateTime(new Date());
+        bookRepository.save(book);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         bookRepository.delete(id);
     }
 
@@ -96,51 +89,34 @@ public class BookServiceImpl implements BookService {
         if (bookTypeRepository.isExist(bookVo.getTypeId())) {
             throw new MyException(CodeConstant.DATA_EXIST);
         }
-        if (CollectionUtils.isEmpty(bookVo.getLabelIds())){
+        if (CollectionUtils.isEmpty(bookVo.getLabelIds())) {
             throw new MyException(CodeConstant.REQUEST_PARAM_ERROR);
         }
         //标签数量为1-5个
         if (bookVo.getLabelIds().size() > 5
-                || bookVo.getLabelIds().size() != LabelRepository.countByIdIn(bookVo.getLabelIds())) {
+                || bookVo.getLabelIds().size() != labelRepository.countByIdIn(bookVo.getLabelIds())) {
             throw new MyException(CodeConstant.DATA_EXIST);
         }
     }
 
     /**
      * 验证传入的书签列表是否与数据中的一致，若不一致则以最终传入的书签列表为准
+     *
      * @param labelIds
      * @param bookId
      */
     private void checkBookLabels(List<Long> labelIds, Long bookId) {
         List<Long> dbLabelIds = bookLabelMapper.findAllLabelIdByBookId(bookId);
-        if (dbLabelIds.containsAll(labelIds) && labelIds.containsAll(dbLabelIds)){
+        if (dbLabelIds.containsAll(labelIds) && labelIds.containsAll(dbLabelIds)) {
             //若新传入的所属标签ID是否与先前保存的一致则表示未修改过标签
             return;
-        }else{
-            List<Long> delLabelIds = Lists.newArrayList();
-            List<Long> newLabelIds = Lists.newArrayList();
-            for (Long labelId : labelIds) {
-                if (!dbLabelIds.contains(labelId)){
-                    //保存了新标签
-                    newLabelIds.add(labelId);
-                }
-            }
-            for (Long labelId : dbLabelIds) {
-                if (!labelIds.contains(labelId)){
-                    //删除了新标签
-                    delLabelIds.add(labelId);
-                }
-            }
-            if (CollectionUtils.isNotEmpty(delLabelIds)){
-                for (Long delLabelId : delLabelIds) {
-                    bookLabelMapper.deleteByBookIdAndLabelId(bookId, delLabelId);
-                }
-            }
-            if (CollectionUtils.isNotEmpty(newLabelIds)){
-                for (Long newLabelId : newLabelIds) {
-                    bookLabelMapper.save(bookId, newLabelId);
-                }
-            }
+        } else {
+            labelIds.stream()
+                    .filter(x -> !dbLabelIds.contains(x))
+                    .forEach(x -> bookLabelMapper.save(bookId, x));
+            dbLabelIds.stream()
+                    .filter(x -> !labelIds.contains(x))
+                    .forEach(x -> bookLabelMapper.deleteByBookIdAndLabelId(bookId, x));
         }
     }
 

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by weida on 2017/6/4.
@@ -35,8 +36,8 @@ public class UserServiceImpl implements UserService {
                                   Integer curPage,
                                   Integer pageSize) {
         PaginationHelper paginationHelper = new PaginationHelper(curPage, pageSize);
-        paginationHelper.setTotal(userMapper.countByConditions(condition, accountType,beginTime, endTime));
-        paginationHelper.setList(userMapper.selectByConditions(condition, accountType,beginTime, endTime, paginationHelper.getBeginIndex(), paginationHelper.getCurrent() * paginationHelper.getPageSize()));
+        paginationHelper.setTotal(userMapper.countByConditions(condition, accountType, beginTime, endTime));
+        paginationHelper.setList(userMapper.selectByConditions(condition, accountType, beginTime, endTime, paginationHelper.getBeginIndex(), paginationHelper.getCurrent() * paginationHelper.getPageSize()));
         return paginationHelper;
     }
 
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public void saveUser(User user) throws Exception {
         //验证邮箱、昵称、手机号是否已被使用
 //        if (userMapper.selectCountByNickNameOrMobileOrEmail(user.getNickName(), user.getMobile(), user.getEmail()) > 0) {
-        if(userRepository.countByNickNameOrMobileOrEmail(user.getNickName(),user.getMobile(),user.getEmail())>0){
+        if (userRepository.countByNickNameOrMobileOrEmail(user.getNickName(), user.getMobile(), user.getEmail()) > 0) {
             throw new MyException(CodeConstant.DATA_EXIST);
         }
         user.setRegisterTime(new Date());
@@ -56,18 +57,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User userForm) throws Exception {
-        User user = userRepository.findOne(userForm.getId());
-        if (user == null) {
-            throw new MyException(CodeConstant.DATA_NOT_EXIST);
-        }
+        User user = Optional.ofNullable(userRepository.findOne(userForm.getId()))
+                .orElseThrow(() -> new MyException(CodeConstant.DATA_NOT_EXIST));
 
-        if (userForm.getAccountType() != null) {
-            user.setAccountType(userForm.getAccountType());
-        }
-
-        if (userForm.getAccountRemain() != null) {
-            user.setAccountRemain(userForm.getAccountRemain());
-        }
+        userForm.getAccountRemainOptional().ifPresent(accountRemain -> user.setAccountRemain(accountRemain));
+        userForm.getAccountTypeOptional().ifPresent(accountType -> user.setAccountType(accountType));
 
         //应该不必手动保存，user扔处于托管状态
         userRepository.save(user);

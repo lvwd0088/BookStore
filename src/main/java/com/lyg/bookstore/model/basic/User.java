@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by weida on 2017/4/9.
@@ -50,5 +51,13 @@ public class User implements Serializable{
 
     @Column(name = "lastLoginTime")
     private Date lastLoginTime;
+
+    public Optional<Integer> getAccountTypeOptional(){
+        return Optional.ofNullable(accountType);
+    }
+
+    public Optional<Double> getAccountRemainOptional(){
+        return Optional.ofNullable(accountRemain);
+    }
 
 }

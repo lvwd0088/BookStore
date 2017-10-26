@@ -18,7 +18,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public BookMessage exceptionHandler(Exception e){
         if(e instanceof MyException){
-//            Integer errorCode=Integer.valueOf(e.getMessage());
             return JsonMessage.failure(Integer.valueOf(e.getMessage()));
         }else{
             e.printStackTrace();

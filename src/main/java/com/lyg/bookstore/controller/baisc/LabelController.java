@@ -18,11 +18,11 @@ import javax.annotation.Resource;
 public class LabelController {
 
     @Resource
-    private LabelService LabelService;
+    private LabelService labelService;
 
     @GetMapping(value = "/Label")
     public BookMessage query(){
-        return new BookMessage(CodeConstant.SUCCESS,LabelService.query());
+        return new BookMessage(CodeConstant.SUCCESS,labelService.query());
     }
 
     @PostMapping(value = "/Label")
@@ -31,7 +31,7 @@ public class LabelController {
             return new BookMessage(CodeConstant.REQUEST_PARAM_ERROR);
         }
         try{
-            LabelService.save(Label.getName());
+            labelService.save(Label.getName());
             return new BookMessage(CodeConstant.SUCCESS);
         }catch (MyException e){
             return new BookMessage(Integer.valueOf(e.getMessage()));
@@ -40,7 +40,7 @@ public class LabelController {
 
     @DeleteMapping(value = "/Label/{id}")
     public BookMessage delete(@PathVariable("id")Long id){
-        LabelService.delete(id);
+        labelService.delete(id);
         return new BookMessage(CodeConstant.SUCCESS);
     }
 

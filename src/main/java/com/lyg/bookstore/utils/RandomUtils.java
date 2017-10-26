@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public final class RandomUtils {
 
-    private static final String randomStrings="abcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String RANDOMSTRINGSEED ="abcdefghijklmnopqrstuvwxyz0123456789";
 
     private RandomUtils() {
 
@@ -22,7 +22,7 @@ public final class RandomUtils {
     public static String getRandomString(int size){
         char[] randomChars=new char[size];
         for (int i=0;i<size;i++){
-            randomChars[i]= randomStrings.charAt(new Random().nextInt(size));
+            randomChars[i]= RANDOMSTRINGSEED.charAt(new Random().nextInt(size));
         }
         return new String(randomChars);
     }

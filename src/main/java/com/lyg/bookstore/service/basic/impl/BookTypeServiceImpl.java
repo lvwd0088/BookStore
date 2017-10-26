@@ -37,8 +37,7 @@ public class BookTypeServiceImpl implements BookTypeService {
                 //若存在父级则存入父级ID对应的list,否则存入父级List
                 if (bookType.getParentId() == null) {
                     BookTypeVo parentBookType = new BookTypeVo();
-                    BeanUtils.copyProperties(bookType, parentBookType);
-                    parentBookType.setParent(bookType.getParentId());
+                    BeanUtils.copyProperties(bookType, parentBookType); 
                     data.add(parentBookType);
                 } else {
                     BookTypeVo childrenBookType = new BookTypeVo();
@@ -73,12 +72,11 @@ public class BookTypeServiceImpl implements BookTypeService {
         Preconditions.checkNotNull(bookTypeForm.getName());
         Preconditions.checkNotNull(bookTypeForm.getId());
         checkPersistentBookType(bookTypeForm);
-        Optional<BookType> bookTypeOptional = Optional.ofNullable(bookTypeRepository.findOne(bookTypeForm.getId()));
-        bookTypeOptional.orElseThrow(() -> new MyException(CodeConstant.DATA_NOT_EXIST));
-        BookType bookTypeBean = bookTypeOptional.get();
-        bookTypeBean.setName(bookTypeForm.getName());
-        bookTypeBean.setDescription(bookTypeForm.getDescription());
-        bookTypeRepository.save(bookTypeBean);
+        BookType bookType = Optional.ofNullable(bookTypeRepository.findOne(bookTypeForm.getId()))
+                .orElseThrow(() -> new MyException(CodeConstant.DATA_NOT_EXIST));
+        bookType.setName(bookTypeForm.getName());
+        bookType.setDescription(bookTypeForm.getDescription());
+        bookTypeRepository.save(bookType);
     }
 
     @Override
